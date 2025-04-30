@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎲 Game Tài Xỉu 🎲</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #F4F4F9;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #FFCC00;
+      font-size: 36px;
+    }
+
+    .dice-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .dice {
+      font-size: 50px;
+      margin: 0 10px;
+    }
+
+    .result, .money {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: #FFCC00;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #FF9900;
+    }
+
+    .bet-section {
+      margin-top: 20px;
+    }
+
+    select, input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎲 Game Tài Xỉu 🎲</h1>
+  
+  <div class="money">
+    <p>Tiền hiện tại: <span id="money">1000</span> 💰</p>
+  </div>
+
+  <div class="bet-section">
+    <select id="betChoice">
+      <option value="tai">Đặt Tài</option>
+      <option value="xiu">Đặt Xỉu</option>
+    </select>
+    <input type="number" id="betAmount" value="100" placeholder="Số tiền cược" min="1">
+  </div>
+
+  <div class="dice-container">
+    <span class="dice" id="dice1">⚀</span>
+    <span class="dice" id="dice2">⚀</span>
+    <span class="dice" id="dice3">⚀</span>
+  </div>
+
+  <button onclick="rollDice()">Tung Xúc Xắc</button>
+
+  <div class="result" id="result">Tổng: 0 → Kết quả: Đang chờ...</div>
+</div>
+
+<script>
+  const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+  let money = 1000;
+
+  function rollDice() {
+    const betChoice = document.getElementById('betChoice').value;
+    const betAmount = parseInt(document.getElementById('betAmount').value);
+    const result = document.getElementById('result');
+    const moneyDisplay = document.getElementById('money');
+
+    if (isNaN(betAmount) || betAmount <= 0 || betAmount > money) {
+      alert("Số tiền cược không hợp lệ!");
+      return;
+    }
+
+    // Tung xúc xắc
+    const d1 = Math.floor(Math.random() * 6) + 1;
+    const d2 = Math.floor(Math.random() * 6) + 1;
+    const d3 = Math.floor(Math.random() * 6) + 1;
+    const total = d1 + d2 + d3;
+
+    // Hiển thị xúc xắc
+    document.getElementById("dice1").innerText = diceFaces[d1 - 1];
+    document.getElementById("dice2").innerText = diceFaces[d2 - 1];
+    document.getElementById("dice3").innerText = diceFaces[d3 - 1];
+
+    // Kiểm tra kết quả
+    let outcome = (total >= 11 && total <= 17) ? "tai" : "xiu";
+    result.innerText = `Tổng: ${total} → Kết quả: ${outcome === betChoice ? "Bạn thắng!" : "Bạn thua!"}`;
+
+    // Cập nhật tiền
+    if (outcome === betChoice) {
+      money += betAmount;
+    } else {
+      money -= betAmount;
+    }
+
+    moneyDisplay.innerText = money;
+
+    if (money <= 0) {
+      alert("Bạn đã hết tiền! Chơi lại!");
+      money = 1000;
+      moneyDisplay.innerText = money;
+    }
+  }
+</script>
+
+</body>
+</html>
